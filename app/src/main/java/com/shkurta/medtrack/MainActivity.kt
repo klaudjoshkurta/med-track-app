@@ -13,8 +13,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.*
 import androidx.navigation3.ui.NavDisplay
 import com.shkurta.medtrack.navigation.Destination
-import com.shkurta.medtrack.ui.addedit.AddEditMedicationScreen
-import com.shkurta.medtrack.ui.addedit.AddEditMedicationViewModel
 import com.shkurta.medtrack.ui.dashboard.DashboardScreen
 import com.shkurta.medtrack.ui.dashboard.DashboardViewModel
 import com.shkurta.medtrack.ui.history.HistoryScreen
@@ -41,10 +39,10 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val backStack = rememberNavBackStack(Destination.Dashboard)
-                
+
                 NavDisplay(
                     backStack = backStack,
-                    onBack = { 
+                    onBack = {
                         if (backStack.size > 1) {
                             backStack.removeAt(backStack.size - 1)
                         }
@@ -54,17 +52,8 @@ class MainActivity : ComponentActivity() {
                             val viewModel: DashboardViewModel = viewModel()
                             DashboardScreen(
                                 viewModel = viewModel,
-                                onAddMedication = { backStack.add(Destination.AddEditMedication()) },
                                 onHistory = { backStack.add(Destination.History) },
                                 onSettings = { backStack.add(Destination.Settings) }
-                            )
-                        }
-                        entry<Destination.AddEditMedication> { key ->
-                            val viewModel: AddEditMedicationViewModel = viewModel()
-                            AddEditMedicationScreen(
-                                id = key.id,
-                                viewModel = viewModel,
-                                onBack = { backStack.removeAt(backStack.size - 1) }
                             )
                         }
                         entry<Destination.History> {

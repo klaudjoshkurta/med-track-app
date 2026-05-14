@@ -8,9 +8,6 @@ sealed interface Destination : NavKey {
     data object Dashboard : Destination
 
     @Serializable
-    data class AddEditMedication(val id: Long? = null) : Destination
-
-    @Serializable
     data object History : Destination
 
     @Serializable

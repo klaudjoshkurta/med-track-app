@@ -20,6 +20,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
@@ -27,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,24 +40,24 @@ import java.util.*
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel,
-    onAddMedication: () -> Unit,
     onHistory: () -> Unit,
     onSettings: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val timeFormatter = remember { SimpleDateFormat("HH:mm", Locale.getDefault()) }
+    val focusRequester = remember { FocusRequester() }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
-                        "Schedule", 
+                        "Schedule",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 20.sp
                         )
-                    ) 
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = {}) {
@@ -85,7 +86,8 @@ fun DashboardScreen(
                 dateLabel = uiState.currentDateLabel,
                 onNameChange = viewModel::onInstantNameChange,
                 onLog = viewModel::instantLog,
-                onAddClick = onAddMedication
+                focusRequester = focusRequester,
+                onAddClick = { focusRequester.requestFocus() }
             )
         },
         containerColor = Color.Black
@@ -110,7 +112,7 @@ fun DashboardScreen(
                         ScheduleTimelineItem(
                             item = item,
                             time = timeFormatter.format(Date(item.timestamp)),
-                            onItemClick = { 
+                            onItemClick = {
                                 if (!item.isTaken) {
                                     viewModel.markAsTaken(item.medication.id)
                                 }
@@ -183,15 +185,13 @@ fun ScheduleTimelineItem(
             .alpha(if (item.isTaken) 0.4f else 1f),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Time
         Text(
             text = time,
             color = Color.White,
             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.width(56.dp)
         )
-        
-        // Vertical Accent Bar
+
         Box(
             modifier = Modifier
                 .padding(horizontal = 12.dp)
@@ -199,8 +199,7 @@ fun ScheduleTimelineItem(
                 .height(24.dp)
                 .background(if (item.isTaken) Color.Gray else Color.White, RoundedCornerShape(2.dp))
         )
-        
-        // Content
+
         Column {
             Text(
                 text = item.medication.name,
@@ -227,6 +226,7 @@ fun ScheduleBottomBar(
     dateLabel: String,
     onNameChange: (String) -> Unit,
     onLog: () -> Unit,
+    focusRequester: FocusRequester,
     onAddClick: () -> Unit
 ) {
     Box(
@@ -239,7 +239,6 @@ fun ScheduleBottomBar(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Quick Entry Field
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -258,7 +257,9 @@ fun ScheduleBottomBar(
                 BasicTextField(
                     value = instantLogName,
                     onValueChange = onNameChange,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
                     textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                     cursorBrush = SolidColor(Color.White),
                     keyboardOptions = KeyboardOptions(
@@ -269,10 +270,9 @@ fun ScheduleBottomBar(
                     singleLine = true
                 )
             }
-            
+
             Spacer(Modifier.width(16.dp))
-            
-            // Large FAB
+
             FloatingActionButton(
                 onClick = onAddClick,
                 containerColor = Color(0xFF333333),
