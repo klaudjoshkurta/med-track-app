@@ -4,15 +4,16 @@ import androidx.compose.ui.graphics.Color
 
 val Black = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)
-val DarkGray = Color(0xFF121212)
-val LightGray = Color(0xFFF5F5F5)
-val Gray = Color(0xFF8E8E93)
 
-// Monochrome Palette
-val PrimaryBlack = Black
-val SecondaryBlack = Color(0xFF1C1C1E)
-val TertiaryBlack = Color(0xFF2C2C2E)
+// Surface containers — barely offset from pure black/white for UI depth
+val SurfaceDark = Color(0xFF111111)
+val SurfaceVariantDark = Color(0xFF1A1A1A)
+val OutlineDark = Color(0xFF2E2E2E)
 
-val PrimaryWhite = White
-val SecondaryWhite = Color(0xFFF2F2F7)
-val TertiaryWhite = Color(0xFFE5E5EA)
+val SurfaceLight = Color(0xFFEEEEEE)
+val SurfaceVariantLight = Color(0xFFE0E0E0)
+val OutlineLight = Color(0xFFCCCCCC)
+
+// Secondary text — readable on their respective backgrounds
+val OnSurfaceDark = Color(0xFFAAAAAA)
+val OnSurfaceLight = Color(0xFF555555)

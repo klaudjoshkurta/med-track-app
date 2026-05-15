@@ -14,6 +14,7 @@ import javax.inject.Inject
 
 data class DashboardUiState(
     val scheduleItems: Map<String, List<ScheduleItem>> = emptyMap(),
+    val medications: List<Medication> = emptyList(),
     val isLoading: Boolean = true,
     val instantLogName: String = "",
     val currentDateLabel: String = ""
@@ -79,6 +80,7 @@ class DashboardViewModel @Inject constructor(
 
         DashboardUiState(
             scheduleItems = grouped,
+            medications = medications,
             isLoading = false,
             instantLogName = instantName,
             currentDateLabel = formatCurrentDateLabel()
